@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.DeleteAccountActivity">
+
+    <EditText
+        android:id="@+id/activity_confirm_delete_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="100dp"
+        android:inputType="textPersonName"
+        android:hint="Confirm Email" />
+
+    <EditText
+        android:id="@+id/activity_confirm_delete_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="150dp"
+        android:layout_marginLeft="100dp"
+        android:inputType="textPassword"
+        android:hint="Confirm Password"/>
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="225dp"
+        android:layout_marginLeft="100dp"
+        android:text="You must confirm with 'I AM SURE'" />
+
+    <EditText
+        android:id="@+id/activity_confirm_delete_sure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="100dp"
+        android:inputType="textPersonName"
+        android:hint="I AM SURE" />
+
+    <Button
+        android:id="@+id/activity_confirm_delete_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="300dp"
+        android:layout_marginLeft="110dp"
+        android:text="DELETE PERMANENT" />
+
+
+</RelativeLayout>
