@@ -64,32 +64,41 @@ public class DeleteAccountActivity extends AppCompatActivity {
     private void deleteAccount() {
         String email = deleteEmail.getText().toString();
         String password = deletePassword.getText().toString();
-        if (email.isEmpty() && password.isEmpty()) {
-            Toast.makeText(this, "Email ou Senha vazio", Toast.LENGTH_SHORT).show();
+        String confirm = deleteConfirm.getText().toString().trim().toUpperCase().replaceAll("\\s","");
+
+        if (confirm.contains("IAMSURE")){
+            if (email.isEmpty() && password.isEmpty()) {
+                Toast.makeText(this, "Email ou Senha vazio", Toast.LENGTH_SHORT).show();
+                finish();
+                goToDeleteAccount();
+            } else {
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(email, password);
+                // Prompt the user to re-provide their sign-in credentials
+                mAuth.getCurrentUser().reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d(TAG, "User re-authenticated.");
+                                mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "User account deleted.");
+                                            finish();
+                                            goToMain();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+            }
+        }else {
+            Toast.makeText(this, "Contains: "+confirm, Toast.LENGTH_SHORT).show();
             finish();
             goToDeleteAccount();
-        } else {
-            AuthCredential credential = EmailAuthProvider
-                    .getCredential(email, password);
-            // Prompt the user to re-provide their sign-in credentials
-            mAuth.getCurrentUser().reauthenticate(credential)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Log.d(TAG, "User re-authenticated.");
-                            mAuth.getCurrentUser().delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Log.d(TAG, "User account deleted.");
-                                        finish();
-                                        goToMain();
-                                    }
-                                }
-                            });
-                        }
-                    });
         }
+
     }
 
     public void goToDeleteAccount() {
