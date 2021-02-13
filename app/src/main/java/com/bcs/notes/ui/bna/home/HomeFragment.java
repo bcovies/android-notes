@@ -36,6 +36,7 @@ public class HomeFragment extends Fragment {
         final TextView textView_userEmail = root.findViewById(R.id.fragment_home_userEmail);
         final Button button_exit = root.findViewById(R.id.fragment_home_button_exit);
         final Button button_reset = root.findViewById(R.id.fragment_home_button_reset);
+
         homeViewModel.getUserID().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -62,6 +63,7 @@ public class HomeFragment extends Fragment {
 
         button_reset.setOnClickListener(new View.OnClickListener() {
             String email = userAuth.getCurrentUserEmail();
+
             @Override
             public void onClick(View v) {
                 userAuth.getInstance().sendPasswordResetEmail(email)
@@ -76,7 +78,6 @@ public class HomeFragment extends Fragment {
                         });
             }
         });
-
 
 
         return root;
