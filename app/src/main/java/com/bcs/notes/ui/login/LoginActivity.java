@@ -1,27 +1,27 @@
-package com.bcs.notes.ui;
+package com.bcs.notes.ui.login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bcs.notes.R;
-import com.bcs.notes.UserAuth;
+import com.bcs.notes.model.UserAuth;
+import com.bcs.notes.ui.bna.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
+
     private static final String TAG = "EmailPassword";
     UserAuth userAuth = new UserAuth();
     private EditText mainEmail;
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         initEditText();
         // [START initialize_auth]
         // Initialize Firebase Auth
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                         goToDashboard();
                         finish();
                     } else {
-                        Toast.makeText(MainActivity.this, "Fail to login", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Fail to login", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                                 goToMain();
                                 finish();
                             } else {
-                                Toast.makeText(MainActivity.this, "Fail to login", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Fail to login", Toast.LENGTH_SHORT).show();
                                 goToMain();
                             }
                         }
@@ -132,10 +132,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToDashboard() {
-        startActivity(new Intent(this, DashboardActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     public void goToMain() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }
