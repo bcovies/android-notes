@@ -1,5 +1,7 @@
 package com.bcs.notes.ui.dashboard;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,7 +74,6 @@ public class DashboardFragment extends Fragment {
         //////////////////////////////////////////
         //////////////// RECYCLER VIEW ///////////
         /////////////////////////////////////////
-
         DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID());
 
         ArrayList<String> stringArray = new ArrayList<String>();
@@ -79,9 +81,9 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot pai : snapshot.getChildren()) {
-                    System.out.println("Título: " + pai.getKey());
+                    System.out.println("Título Pai: " + pai.getKey());
                     for (DataSnapshot filho : pai.getChildren()) {
-                        System.out.println("Título: " + filho.getKey());
+                        System.out.println("Título FIlho: " + filho.getKey());
                         stringArray.add(filho.getValue().toString());
                     }
                 }
@@ -104,7 +106,7 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
-    private void writeNewPost(String setor, String produto) {
+       private void writeNewPost(String setor, String produto) {
         DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/" + setor);
         String key = path.push().getKey();
         Map<String, Object> childUpdates = new HashMap<>();
@@ -113,4 +115,5 @@ public class DashboardFragment extends Fragment {
         Toast.makeText(getActivity(), "Posted!", Toast.LENGTH_SHORT).show();
 
     }
+
 }
