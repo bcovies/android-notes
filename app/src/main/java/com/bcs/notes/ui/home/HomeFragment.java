@@ -1,4 +1,4 @@
-package com.bcs.notes.ui.bna.home;
+package com.bcs.notes.ui.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bcs.notes.R;
 import com.bcs.notes.model.UserAuth;
-import com.bcs.notes.ui.login.LoginActivity;
+import com.bcs.notes.ui.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 

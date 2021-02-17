@@ -1,13 +1,9 @@
-package com.bcs.notes.ui.bna.home;
-
-import android.view.View;
-import android.widget.Button;
+package com.bcs.notes.ui.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.bcs.notes.R;
 import com.bcs.notes.model.UserAuth;
 
 public class HomeViewModel extends ViewModel {

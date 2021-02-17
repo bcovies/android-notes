@@ -1,4 +1,4 @@
-package com.bcs.notes.ui.login;
+package com.bcs.notes.ui;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.bcs.notes.R;
 import com.bcs.notes.model.UserAuth;
-import com.bcs.notes.ui.bna.BtnActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -131,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToDashboard() {
-        startActivity(new Intent(this, BtnActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     public void goToMain() {

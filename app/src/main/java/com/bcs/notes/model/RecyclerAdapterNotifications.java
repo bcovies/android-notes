@@ -6,30 +6,27 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcs.notes.R;
-import com.google.firebase.database.ValueEventListener;
-
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
+public class RecyclerAdapterNotifications extends RecyclerView.Adapter<RecyclerAdapterNotifications.MyViewHolder> {
 
     private ArrayList<String> mNames = new ArrayList<>();
+    private ArrayList<String> mPai = new ArrayList<>();
     private Context mContext;
 
 
-    public RecyclerAdapter(Context context, ArrayList<String> Names ) {
+    public RecyclerAdapterNotifications(Context context, ArrayList<String> Names ) {
         mNames = Names;
+
         mContext = context;
     }
 
@@ -44,6 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         holder.bindView(mNames.get(position));
+
     }
 
     @Override
@@ -56,18 +54,21 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
         private static final String TAG = "MyViewHolder";
         TextView textView;
+        TextView textView_pai;
         ImageButton imageButton;
 
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.fragment_dashboard_recyclerview_list_item_textView);
+            textView = itemView.findViewById(R.id.fragment_notifications_recyclerview_list_item_textView);
+            textView_pai = itemView.findViewById(R.id.fragment_notifications_recyclerview_list_item_pai);
             imageButton = itemView.findViewById(R.id.imageButton);
             imageButton.setOnClickListener(this);
         }
 
         void bindView(String row) {
             textView.setText(row);
+
         }
 
         @Override
