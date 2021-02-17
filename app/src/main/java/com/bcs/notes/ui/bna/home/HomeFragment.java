@@ -32,8 +32,8 @@ public class HomeFragment extends Fragment {
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        final TextView textView_userID = root.findViewById(R.id.fragment_home_userID);
-        final TextView textView_userEmail = root.findViewById(R.id.fragment_home_userEmail);
+        final TextView textView_userID = root.findViewById(R.id.fragment_home_textView_userID);
+        final TextView textView_userEmail = root.findViewById(R.id.fragment_home_textView_userEmail);
         final Button button_exit = root.findViewById(R.id.fragment_home_button_exit);
         final Button button_reset = root.findViewById(R.id.fragment_home_button_reset);
 
@@ -78,8 +78,6 @@ public class HomeFragment extends Fragment {
                         });
             }
         });
-
-
         return root;
     }
 

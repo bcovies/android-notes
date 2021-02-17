@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +12,7 @@ import android.widget.Toast;
 
 import com.bcs.notes.R;
 import com.bcs.notes.model.UserAuth;
-import com.bcs.notes.ui.bna.MainActivity;
+import com.bcs.notes.ui.bna.BtnActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -31,8 +30,8 @@ public class LoginActivity extends AppCompatActivity {
 
     // [END declare_auth]
     public void initEditText() {
-        mainEmail = findViewById(R.id.activity_main_email);
-        mainPassword = findViewById(R.id.activity_main_password);
+        mainEmail = findViewById(R.id.activity_login_editText_email);
+        mainPassword = findViewById(R.id.activity_login_editText_senha);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void buttonRegister() {
-        Button buttonRegister = findViewById(R.id.activity_main_button_register);
+        Button buttonRegister = findViewById(R.id.activity_login_button_register);
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,7 +71,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void buttonLogin() {
-        Button buttonLogin = findViewById(R.id.activity_main_button_login);
+        Button buttonLogin = findViewById(R.id.activity_login_button_login);
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToDashboard() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, BtnActivity.class));
     }
 
     public void goToMain() {

@@ -8,23 +8,23 @@
     tools:context=".ui.login.LoginActivity">
 
     <Button
-        android:id="@+id/activity_main_button_login"
+        android:id="@+id/activity_login_button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="500dp"
         android:layout_marginLeft="150dp"
-        android:text="Login" />
+        android:layout_marginTop="500dp"
+        android:text="Entrar" />
 
     <Button
-        android:id="@+id/activity_main_button_register"
+        android:id="@+id/activity_login_button_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="550dp"
         android:layout_marginLeft="144dp"
-        android:text="Register" />
+        android:layout_marginTop="550dp"
+        android:text="Registrar" />
 
     <EditText
-        android:id="@+id/activity_main_email"
+        android:id="@+id/activity_login_editText_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
@@ -34,14 +34,14 @@
         android:inputType="textEmailAddress" />
 
     <EditText
-        android:id="@+id/activity_main_password"
+        android:id="@+id/activity_login_editText_senha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="400dp"
         android:layout_marginLeft="100dp"
+        android:layout_marginTop="400dp"
         android:ems="10"
-        android:inputType="textPassword"
-        android:hint="Password"/>
+        android:hint="Senha"
+        android:inputType="textPassword" />
 
 
     </RelativeLayout>

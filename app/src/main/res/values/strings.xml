@@ -6,5 +6,7 @@
     <string name="item">Item</string>
     <string name="exit">Exit</string>
     <string name="reset_email">Reset Email</string>
+    <string name="sair">Sair</string>
+    <string name="reset_senha_por_email">reset senha por email</string>
 
 </resources>

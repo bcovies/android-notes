@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.bna.MainActivity"
+            android:name=".ui.bna.BtnActivity"
             android:label="@string/app_name">
 
         </activity>
