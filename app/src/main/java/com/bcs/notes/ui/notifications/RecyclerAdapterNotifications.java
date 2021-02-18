@@ -22,8 +22,7 @@ import java.util.Set;
 public class RecyclerAdapterNotifications extends RecyclerView.Adapter<RecyclerAdapterNotifications.MyViewHolder> {
 
     public ArrayList<String> mNames = new ArrayList<>();
-    public ArrayList<String> list = new ArrayList<>();
-
+    public Set<String> set = new HashSet<String>();
     public Context mContext;
 
 
@@ -65,24 +64,25 @@ public class RecyclerAdapterNotifications extends RecyclerView.Adapter<RecyclerA
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-//        editor.putString("a", "stack overflow");
-//        editor.putInt("b", 32);
-//        editor.putBoolean("c", true);
-//        editor.commit();
-        SharedPreferences.Editor editor = this.mContext.getSharedPreferences("pref", Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = this.mContext.getSharedPreferences("TAG", Context.MODE_PRIVATE).edit();
 
         holder.bindView(mNames.get(position));
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (holder.checkBox.isChecked()) {
-                    Set<String> set = new HashSet<String>();
-                    System.out.println(mNames.get(position));
-                    list.add(mNames.get(position));
-                    set.addAll(list);
-                    System.out.println(set);
-                    editor.putStringSet("key", set);
+
+                if (isChecked) {
+                    System.out.println("[ON]ANTES:" + set.toString());
+                    set.add(mNames.get(position));
+                    System.out.println("[ON]DPS: " + set.toString());
+                    editor.putStringSet("ARRAY",set);
+                    editor.commit();
+                } else {
+                    System.out.println("[OFF]ANTES:" + set.toString());
+                    set.remove(mNames.get(position));
+                    System.out.println("[OFF]DPS CLEAR: " + set.toString());
+                    editor.clear();
+                    editor.putStringSet("ARRAY",set);
                     editor.commit();
                 }
             }
