@@ -1,4 +1,4 @@
-package com.bcs.notes.model;
+package com.bcs.notes.ui.dashboard;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -18,6 +18,7 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcs.notes.R;
+import com.bcs.notes.model.UserAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -180,7 +181,7 @@ public class RecyclerAdapterDashboard extends RecyclerView.Adapter<RecyclerAdapt
 
                                         alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                               
+
                                                 filho.getRef().removeValue();
                                             }
                                         });

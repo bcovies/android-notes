@@ -5,49 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-
     <TextView
-        android:id="@+id/fragment_notifications_recyclerview_list_item_pai"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/fragment_notifications_recyclerview_list_textView"
+        android:layout_width="331dp"
+        android:layout_height="49dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:padding="16dp"
         android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <TextView
-        android:id="@+id/fragment_notifications_recyclerview_list_item_textView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:padding="16dp"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
+    <CheckBox
+        android:id="@+id/fragment_notifications_recyclerview_list_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/black"
+
+        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/fragment_notifications_recyclerview_list_textView"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="16dp"
-        />
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
