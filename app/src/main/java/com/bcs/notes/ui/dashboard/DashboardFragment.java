@@ -66,7 +66,7 @@ public class DashboardFragment extends Fragment {
         //////////////////////////////////////////
         //////////////// RECYCLER VIEW ///////////
         /////////////////////////////////////////
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID());
+        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID()+"/mercado");
 
         ArrayList<String> stringArray = new ArrayList<String>();
         path.addValueEventListener(new ValueEventListener() {
@@ -99,7 +99,7 @@ public class DashboardFragment extends Fragment {
     }
 
        private void writeNewPost(String setor, String produto) {
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/" + setor);
+        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/" +  "mercado/" + setor);
         String key = path.push().getKey();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(key, produto);

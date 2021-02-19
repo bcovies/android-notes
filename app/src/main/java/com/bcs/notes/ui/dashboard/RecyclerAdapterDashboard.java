@@ -103,7 +103,7 @@ public class RecyclerAdapterDashboard extends RecyclerView.Adapter<RecyclerAdapt
         }
 
         UserAuth userAuth = new UserAuth();
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID());
+        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID()+"/mercado");
         // Initialize activity
 
 
