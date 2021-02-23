@@ -56,6 +56,7 @@ public class NotificationsFragment extends Fragment {
         recyclerView_lista.setAdapter(recyclerAdapterNotificationsLista);
         recyclerView_lista.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
+
     private void inicializarRecyclerViewNotificationsProduto() {
         recyclerView_produtos = view.findViewById(R.id.fragment_notifications_recyclerView);
         recyclerAdapterNotificationsProduto = new RecyclerAdapterNotificationsProduto(getActivity(), stringArray_produtos);
@@ -86,7 +87,10 @@ public class NotificationsFragment extends Fragment {
             public void onClick(View v) {
                 Set<String> set = sharedPreferences_Notifications.getStringSet("ARRAY-PRODUTO", null);
                 List<String> list = new ArrayList<String>(set);
-                criarLista(editText_nomeLista.getText().toString(), list);
+                String nomeLista = editText_nomeLista.getText().toString();
+                nomeLista = nomeLista.replaceAll("[{}()\\[\\].+*?^$|/\\[-]]", "");
+                String nomeListaFinal = nomeLista.replaceAll("/", "");
+                criarLista(nomeListaFinal, list);
             }
         });
 
