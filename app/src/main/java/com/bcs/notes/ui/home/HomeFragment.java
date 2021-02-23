@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 userAuth.singOut();
                 getActivity().finish();
-                goToMain();
+                irParaLoginActivity();
             }
         });
 
@@ -82,7 +82,7 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void goToMain() {
+    private void irParaLoginActivity() {
         startActivity(new Intent(getActivity(), LoginActivity.class));
     }
 

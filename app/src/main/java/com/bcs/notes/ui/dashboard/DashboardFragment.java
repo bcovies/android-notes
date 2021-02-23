@@ -30,63 +30,59 @@ import java.util.Map;
 public class DashboardFragment extends Fragment {
 
     UserAuth userAuth = new UserAuth();
+    private ArrayList<String> stringArray;
+    private String[] listaSpinnerSetores;
+    private Button button_insert;
+    private Spinner spinnerSetores;
+    private EditText editText_produto;
+    private DatabaseReference databaseReference_mercado;
+    private DatabaseReference databaseReference_setor;
+    private RecyclerView recyclerView_dashboard;
+    private RecyclerAdapterDashboard recyclerAdapterDashboard;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
+        databaseReference_mercado = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/mercado");
 
-        //////////////////////////////////////////
-        ////////////////  SPINNER      ///////////
-        /////////////////////////////////////////
-        Spinner spinnerSetores = view.findViewById(R.id.fragment_dashboard_spinner);
-        String[] listaSpinnerSetores = getResources().getStringArray(R.array.fragment_dashboard_spinner_list);
+        spinnerSetores = view.findViewById(R.id.fragment_dashboard_spinner);
+        listaSpinnerSetores = getResources().getStringArray(R.array.fragment_dashboard_spinner_list);
         spinnerSetores.setAdapter(new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, listaSpinnerSetores));
 
-
-        //////////////////////////////////////////
-        ////////// BUTTOM && EDTITEXT  ///////////
-        /////////////////////////////////////////
-        Button button_insert = view.findViewById(R.id.fragment_dashboard_button_insert);
-        EditText note = view.findViewById(R.id.fragment_dashboard_editText_produto);
+        button_insert = view.findViewById(R.id.fragment_dashboard_button_insert);
+        editText_produto = view.findViewById(R.id.fragment_dashboard_editText_produto);
 
 
         button_insert.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String setor = spinnerSetores.getSelectedItem().toString();
-                String produto = note.getText().toString();
+                String produto = editText_produto.getText().toString();
                 if (produto.isEmpty()) {
-                    Toast.makeText(getContext(), "Campos vazios!!", Toast.LENGTH_SHORT).show();
                 } else {
-                    writeNewPost(setor, produto);
+                    criarUmaPostagem(setor, produto);
                 }
             }
         });
 
-        //////////////////////////////////////////
-        //////////////// RECYCLER VIEW ///////////
-        /////////////////////////////////////////
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID());
-
-        ArrayList<String> stringArray = new ArrayList<String>();
-        path.addValueEventListener(new ValueEventListener() {
+        stringArray = new ArrayList<String>();
+        databaseReference_mercado.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot pai : snapshot.getChildren()) {
-                    System.out.println("Título Pai: " + pai.getKey());
                     for (DataSnapshot filho : pai.getChildren()) {
-                        System.out.println("Título FIlho: " + filho.getKey());
                         stringArray.add(filho.getValue().toString());
                     }
                 }
-                initRecyclerView();
+                inicializarRecyclerView();
             }
 
-            private void initRecyclerView() {
-                RecyclerView recyclerView = view.findViewById(R.id.fragment_dashboard_recyclerView);
-                RecyclerAdapterDashboard adapter = new RecyclerAdapterDashboard(getActivity(), stringArray);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            private void inicializarRecyclerView() {
+                recyclerView_dashboard = view.findViewById(R.id.fragment_dashboard_recyclerView);
+                recyclerAdapterDashboard = new RecyclerAdapterDashboard(getActivity(), stringArray);
+                recyclerView_dashboard.setAdapter(recyclerAdapterDashboard);
+                recyclerView_dashboard.setLayoutManager(new LinearLayoutManager(getActivity()));
             }
 
             @Override
@@ -98,14 +94,12 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
-       private void writeNewPost(String setor, String produto) {
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/" + setor);
-        String key = path.push().getKey();
+    private void criarUmaPostagem(String setor, String produto) {
+        databaseReference_setor = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/" + "mercado/" + setor);
+        String key = databaseReference_setor.push().getKey();
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put(key, produto);
-        path.updateChildren(childUpdates);
-        Toast.makeText(getActivity(), "Posted!", Toast.LENGTH_SHORT).show();
-
+        databaseReference_setor.updateChildren(childUpdates);
     }
 
 }

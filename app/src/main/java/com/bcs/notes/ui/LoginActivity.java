@@ -8,10 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.bcs.notes.R;
-import com.bcs.notes.model.UserAuth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,82 +18,70 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "EmailPassword";
-    UserAuth userAuth = new UserAuth();
-    private EditText mainEmail;
-    private EditText mainPassword;
-    // [START declare_auth]
-    private FirebaseAuth mAuth;
+    private EditText editText_email;
+    private EditText editText_senha;
+    private FirebaseAuth firebaseAuth;
+    private Button button_login;
+    private Button button_register;
 
-    // [END declare_auth]
-    public void initEditText() {
-        mainEmail = findViewById(R.id.activity_login_editText_email);
-        mainPassword = findViewById(R.id.activity_login_editText_senha);
+    private void irParaMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        initEditText();
-        // [START initialize_auth]
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        // [END initialize_auth]
-
-        buttonRegister();
-        buttonLogin();
+    private void irParaLoginActivity() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and goToAcitivity UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
             finish();
-            goToDashboard();
+            irParaMainActivity();
         }
     }
 
-    private void buttonRegister() {
-        Button buttonRegister = findViewById(R.id.activity_login_button_register);
-        buttonRegister.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        editText_email = findViewById(R.id.activity_login_editText_email);
+        editText_senha = findViewById(R.id.activity_login_editText_senha);
+
+        button_register = findViewById(R.id.activity_login_button_register);
+        button_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUp();
+                registrarUsuario();
+            }
+        });
+
+        button_login = findViewById(R.id.activity_login_button_login);
+        button_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                entrarUsuario();
             }
         });
     }
 
-    private void buttonLogin() {
-        Button buttonLogin = findViewById(R.id.activity_login_button_login);
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signIn();
-            }
-        });
-    }
-
-    private void signIn() {
-        String email = mainEmail.getText().toString();
-        String password = mainPassword.getText().toString();
+    private void entrarUsuario() {
+        String email = editText_email.getText().toString();
+        String password = editText_senha.getText().toString();
         if (email.isEmpty() && password.isEmpty()) {
-            Toast.makeText(this, "Email ou Senha vazio", Toast.LENGTH_SHORT).show();
             finish();
-            goToMain();
+            irParaLoginActivity();
         } else {
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
-                        goToDashboard();
+                        irParaMainActivity();
                         finish();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Fail to login", Toast.LENGTH_SHORT).show();
-
                     }
                 }
             });
@@ -103,37 +89,26 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void signUp() {
-        String email = mainEmail.getText().toString();
-        String password = mainPassword.getText().toString();
-        // [START create_user_with_email]
+    private void registrarUsuario() {
+        String email = editText_email.getText().toString();
+        String password = editText_senha.getText().toString();
         if (email.isEmpty() && password.isEmpty()) {
-            Toast.makeText(this, "Email ou Senha vazio", Toast.LENGTH_SHORT).show();
             finish();
-            goToMain();
+            irParaLoginActivity();
         } else {
-            mAuth.createUserWithEmailAndPassword(email, password)
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                goToMain();
+                                irParaLoginActivity();
                                 finish();
                             } else {
-                                Toast.makeText(LoginActivity.this, "Fail to login", Toast.LENGTH_SHORT).show();
-                                goToMain();
+                                irParaLoginActivity();
                             }
                         }
                     });
-            // [END create_user_with_email]
         }
     }
 
-    public void goToDashboard() {
-        startActivity(new Intent(this, MainActivity.class));
-    }
-
-    public void goToMain() {
-        startActivity(new Intent(this, LoginActivity.class));
-    }
 }

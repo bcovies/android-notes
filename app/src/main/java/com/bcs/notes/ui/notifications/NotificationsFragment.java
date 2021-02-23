@@ -22,7 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -39,11 +41,12 @@ public class NotificationsFragment extends Fragment {
         Button button = view.findViewById(R.id.fragment_notifications_button_adicionarLista);
         EditText editText = view.findViewById(R.id.fragment_notifications_editText_nomeLista);
 
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID());
+        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/mercado");
+
         ArrayList<String> stringArray = new ArrayList<String>();
+        ArrayList<String> stringArrayLista = new ArrayList<String>();
 
         SharedPreferences pref = getContext().getSharedPreferences("TAG", getContext().MODE_PRIVATE);
-
 
         RecyclerAdapterNotifications recyclerAdapterNotifications = new RecyclerAdapterNotifications();
         button.setOnClickListener(new View.OnClickListener() {
@@ -51,9 +54,14 @@ public class NotificationsFragment extends Fragment {
             public void onClick(View v) {
                 System.out.println(editText.getText().toString());
                 Toast.makeText(getContext(), editText.getText().toString(), Toast.LENGTH_SHORT).show();
-                Set<String> set = pref.getStringSet("ARRAY",null);
-                System.out.println(set.toString());
 
+                Set<String> set = pref.getStringSet("ARRAY", null);
+
+                System.out.println(set.toString());
+                List<String> list = new ArrayList<String>(set);
+
+
+                criarLista(editText.getText().toString(),list);
             }
         });
 
@@ -86,6 +94,45 @@ public class NotificationsFragment extends Fragment {
 
         });
 
+        //////////////////////////////////////////
+        //////////////// RECYCLER VIEW 2 ///////////
+        /////////////////////////////////////////
+        DatabaseReference path2 = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/lista");
+
+        path2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot pai : snapshot.getChildren()) {
+                    stringArrayLista.add(pai.getKey());
+
+                }
+                initRecyclerView();
+            }
+
+            private void initRecyclerView() {
+                RecyclerView recyclerView2 = view.findViewById(R.id.fragment_notifications_recyclerView_lista);
+                RecyclerAdapterNotificationsLista adapter = new RecyclerAdapterNotificationsLista(getActivity(), stringArrayLista);
+                recyclerView2.setAdapter(adapter);
+                recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
+
         return view;
     }
+
+    public void criarLista(String key,List<String> lista) {
+        DatabaseReference path_lista = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/lista");
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(key, lista);
+        path_lista.updateChildren(childUpdates);
+        Toast.makeText(getActivity(), "Posted!", Toast.LENGTH_SHORT).show();
+    }
+
 }
