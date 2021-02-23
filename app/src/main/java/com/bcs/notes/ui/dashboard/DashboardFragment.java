@@ -29,7 +29,7 @@ import java.util.Map;
 
 public class DashboardFragment extends Fragment {
 
-    UserAuth userAuth = new UserAuth();
+    private UserAuth userAuth = new UserAuth();
     private ArrayList<String> stringArray;
     private String[] listaSpinnerSetores;
     private Button button_insert;
@@ -39,6 +39,14 @@ public class DashboardFragment extends Fragment {
     private DatabaseReference databaseReference_setor;
     private RecyclerView recyclerView_dashboard;
     private RecyclerAdapterDashboard recyclerAdapterDashboard;
+
+    private void criarUmaPostagem(String setor, String produto) {
+        databaseReference_setor = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/" + "mercado/" + setor);
+        String key = databaseReference_setor.push().getKey();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(key, produto);
+        databaseReference_setor.updateChildren(childUpdates);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -93,13 +101,4 @@ public class DashboardFragment extends Fragment {
         });
         return view;
     }
-
-    private void criarUmaPostagem(String setor, String produto) {
-        databaseReference_setor = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/" + "mercado/" + setor);
-        String key = databaseReference_setor.push().getKey();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(key, produto);
-        databaseReference_setor.updateChildren(childUpdates);
-    }
-
 }

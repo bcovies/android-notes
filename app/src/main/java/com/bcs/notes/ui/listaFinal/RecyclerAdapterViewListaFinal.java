@@ -15,31 +15,13 @@ import java.util.ArrayList;
 
 public class RecyclerAdapterViewListaFinal extends RecyclerView.Adapter<RecyclerAdapterViewListaFinal.MyViewHolder> {
 
-    public ArrayList<String> mNames = new ArrayList<>();
-    public Context mContext;
+    private ArrayList<String> arrayList_listaFinal = new ArrayList<>();
+    private Context context;
 
-    public RecyclerAdapterViewListaFinal(Context context, ArrayList<String> Names) {
-        mNames = Names;
-        mContext = context;
+    public RecyclerAdapterViewListaFinal(Context context, ArrayList<String> arrayList_listaFinal) {
+        this.context = context;
+        this.arrayList_listaFinal = arrayList_listaFinal;
     }
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        TextView textView;
-
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.activity_view_lista_final_textView);
-
-        }
-
-        public void bindView(String row) {
-            textView.setText(row);
-        }
-    }
-
 
     @NonNull
     @Override
@@ -50,12 +32,28 @@ public class RecyclerAdapterViewListaFinal extends RecyclerView.Adapter<Recycler
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.bindView(mNames.get(position));
+        holder.bindView(arrayList_listaFinal.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mNames.size();
+        return arrayList_listaFinal.size();
+    }
+
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView textView;
+
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.activity_view_lista_final_textView);
+        }
+
+        public void bindView(String row) {
+            textView.setText(row);
+        }
     }
 }
 

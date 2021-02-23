@@ -31,108 +31,94 @@ import java.util.Set;
 public class NotificationsFragment extends Fragment {
 
     //https://pt.stackoverflow.com/questions/25167/salvar-valor-em-sharedpreference
-    UserAuth userAuth = new UserAuth();
+
+    private UserAuth userAuth = new UserAuth();
+    private Button button_adicionarLista;
+    private EditText editText_nomeLista;
+    private View view;
+
+    private DatabaseReference databaseReference_mercado;
+    private DatabaseReference databaseReference_lista;
+
+    private ArrayList<String> stringArray_produtos = new ArrayList<String>();
+    private ArrayList<String> stringArray_lista = new ArrayList<String>();
+
+    private SharedPreferences sharedPreferences_Notifications;
+
+    private RecyclerAdapterNotificationsProduto recyclerAdapterNotificationsProduto;
+    private RecyclerAdapterNotificationsLista recyclerAdapterNotificationsLista;
+    private RecyclerView recyclerView_produtos;
+    private RecyclerView recyclerView_lista;
+
+    private void inicializarRecyclerViewNotificationsMercado() {
+        recyclerView_lista = view.findViewById(R.id.fragment_notifications_recyclerView_lista);
+        recyclerAdapterNotificationsLista = new RecyclerAdapterNotificationsLista(getActivity(), stringArray_lista);
+        recyclerView_lista.setAdapter(recyclerAdapterNotificationsLista);
+        recyclerView_lista.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+    private void inicializarRecyclerViewNotificationsProduto() {
+        recyclerView_produtos = view.findViewById(R.id.fragment_notifications_recyclerView);
+        recyclerAdapterNotificationsProduto = new RecyclerAdapterNotificationsProduto(getActivity(), stringArray_produtos);
+        recyclerView_produtos.setAdapter(recyclerAdapterNotificationsProduto);
+        recyclerView_produtos.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    private void criarLista(String key, List<String> lista) {
+        DatabaseReference path_lista = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/lista");
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put(key, lista);
+        path_lista.updateChildren(childUpdates);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
+        button_adicionarLista = view.findViewById(R.id.fragment_notifications_button_adicionarLista);
+        editText_nomeLista = view.findViewById(R.id.fragment_notifications_editText_nomeLista);
 
-        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
+        databaseReference_mercado = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/mercado");
+        databaseReference_lista = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/lista");
 
-        Button button = view.findViewById(R.id.fragment_notifications_button_adicionarLista);
-        EditText editText = view.findViewById(R.id.fragment_notifications_editText_nomeLista);
+        sharedPreferences_Notifications = getContext().getSharedPreferences("TAG-PRODUTO", getContext().MODE_PRIVATE);
 
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/mercado");
-
-        ArrayList<String> stringArray = new ArrayList<String>();
-        ArrayList<String> stringArrayLista = new ArrayList<String>();
-
-        SharedPreferences pref = getContext().getSharedPreferences("TAG", getContext().MODE_PRIVATE);
-
-        RecyclerAdapterNotifications recyclerAdapterNotifications = new RecyclerAdapterNotifications();
-        button.setOnClickListener(new View.OnClickListener() {
+        button_adicionarLista.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(editText.getText().toString());
-                Toast.makeText(getContext(), editText.getText().toString(), Toast.LENGTH_SHORT).show();
-
-                Set<String> set = pref.getStringSet("ARRAY", null);
-
-                System.out.println(set.toString());
+                Set<String> set = sharedPreferences_Notifications.getStringSet("ARRAY-PRODUTO", null);
                 List<String> list = new ArrayList<String>(set);
-
-
-                criarLista(editText.getText().toString(),list);
+                criarLista(editText_nomeLista.getText().toString(), list);
             }
         });
 
-        //////////////////////////////////////////
-        //////////////// RECYCLER VIEW ///////////
-        /////////////////////////////////////////
-
-        path.addValueEventListener(new ValueEventListener() {
+        databaseReference_mercado.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot pai : snapshot.getChildren()) {
                     for (DataSnapshot filho : pai.getChildren()) {
-                        stringArray.add(filho.getValue().toString());
+                        stringArray_produtos.add(filho.getValue().toString());
                     }
                 }
-                initRecyclerView();
-            }
-
-            private void initRecyclerView() {
-                RecyclerView recyclerView = view.findViewById(R.id.fragment_notifications_recyclerView);
-                RecyclerAdapterNotifications adapter = new RecyclerAdapterNotifications(getActivity(), stringArray);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                inicializarRecyclerViewNotificationsProduto();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
-
         });
-
-        //////////////////////////////////////////
-        //////////////// RECYCLER VIEW 2 ///////////
-        /////////////////////////////////////////
-        DatabaseReference path2 = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/lista");
-
-        path2.addValueEventListener(new ValueEventListener() {
+        databaseReference_lista.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot pai : snapshot.getChildren()) {
-                    stringArrayLista.add(pai.getKey());
-
+                    stringArray_lista.add(pai.getKey());
                 }
-                initRecyclerView();
-            }
-
-            private void initRecyclerView() {
-                RecyclerView recyclerView2 = view.findViewById(R.id.fragment_notifications_recyclerView_lista);
-                RecyclerAdapterNotificationsLista adapter = new RecyclerAdapterNotificationsLista(getActivity(), stringArrayLista);
-                recyclerView2.setAdapter(adapter);
-                recyclerView2.setLayoutManager(new LinearLayoutManager(getActivity()));
+                inicializarRecyclerViewNotificationsMercado();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
-
         });
 
         return view;
     }
-
-    public void criarLista(String key,List<String> lista) {
-        DatabaseReference path_lista = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/lista");
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put(key, lista);
-        path_lista.updateChildren(childUpdates);
-        Toast.makeText(getActivity(), "Posted!", Toast.LENGTH_SHORT).show();
-    }
-
 }

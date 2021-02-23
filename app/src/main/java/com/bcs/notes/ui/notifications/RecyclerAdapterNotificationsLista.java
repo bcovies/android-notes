@@ -3,6 +3,7 @@ package com.bcs.notes.ui.notifications;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SyncStats;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,49 +20,13 @@ import java.util.ArrayList;
 
 public class RecyclerAdapterNotificationsLista extends RecyclerView.Adapter<RecyclerAdapterNotificationsLista.MyViewHolder> {
 
-    public ArrayList<String> mNames = new ArrayList<>();
-    public Context mContext;
+    private ArrayList<String> arrayListProduto = new ArrayList<>();
+    private Context context;
 
-    public RecyclerAdapterNotificationsLista(Context context, ArrayList<String> Names) {
-        mNames = Names;
-        mContext = context;
+    public RecyclerAdapterNotificationsLista(Context context, ArrayList<String> arrayListProduto) {
+        this.arrayListProduto = arrayListProduto;
+        this.context = context;
     }
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        TextView textView;
-        Button button;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            textView = itemView.findViewById(R.id.fragment_notifications_recyclerview_list_textView_list);
-            button = itemView.findViewById(R.id.fragment_notifications_recyclerview_list_textView_button);
-
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SharedPreferences.Editor editor = mContext.getSharedPreferences("TAGG", Context.MODE_PRIVATE).edit();
-
-                    System.out.println(textView.getText().toString());
-                    String pathcomplementar = textView.getText().toString();
-
-                    editor.putString("STRING", pathcomplementar);
-                    editor.commit();
-
-
-
-                    mContext.startActivity(new Intent(mContext, ViewListaFinal.class));
-                }
-            });
-        }
-
-        public void bindView(String row) {
-            textView.setText(row);
-        }
-    }
-
 
     @NonNull
     @Override
@@ -72,18 +37,39 @@ public class RecyclerAdapterNotificationsLista extends RecyclerView.Adapter<Recy
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.bindView(mNames.get(position));
-
-
+        holder.bindView(arrayListProduto.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mNames.size();
+        return arrayListProduto.size();
     }
 
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView textView;
+        private Button button;
 
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.fragment_notifications_recyclerview_list_textView_list);
+            button = itemView.findViewById(R.id.fragment_notifications_recyclerview_list_textView_button);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferences.Editor editor = context.getSharedPreferences("TAG-LISTA", Context.MODE_PRIVATE).edit();
+                    String pathcomplementar = textView.getText().toString();
+                    editor.putString("ARRAY-LISTA", pathcomplementar);
+                    editor.commit();
+                    context.startActivity(new Intent(context, ViewListaFinal.class));
+                }
+            });
+        }
+
+        public void bindView(String row) {
+            textView.setText(row);
+        }
+    }
 }
 
 
