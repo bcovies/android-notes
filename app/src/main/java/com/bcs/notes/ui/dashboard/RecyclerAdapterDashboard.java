@@ -1,8 +1,10 @@
 package com.bcs.notes.ui.dashboard;
 
-import android.app.Dialog;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,11 +12,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bcs.notes.R;
@@ -23,26 +26,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RecyclerAdapterDashboard extends RecyclerView.Adapter<RecyclerAdapterDashboard.MyViewHolder> {
 
-    private ArrayList<String> mNames = new ArrayList<>();
-    private Context mContext;
-    Dialog myDialog;
     //https://www.youtube.com/watch?v=Zd0TUuoPP-s&ab_channel=AwsRh
     //https://stackoverflow.com/questions/6626006/android-custom-dialog-cant-get-text-from-edittext/14091604#14091604
-    AlertDialog.Builder alert;
-    LayoutInflater linf;
-    View inflator;
+    private ArrayList<String> arrayList_produtos = new ArrayList<>();
+    private Context context;
+    private RecyclerView recyclerView_dashboard;
 
-    public RecyclerAdapterDashboard(Context context, ArrayList<String> Names) {
-        mNames = Names;
-        mContext = context;
+    public RecyclerAdapterDashboard(Context context, ArrayList<String> arrayList_produtos) {
+        this.arrayList_produtos = arrayList_produtos;
+        this.context = context;
     }
 
 
@@ -50,44 +48,36 @@ public class RecyclerAdapterDashboard extends RecyclerView.Adapter<RecyclerAdapt
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_dashboard_recyclerview_list_item, parent, false);
-
-
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.bindView(mNames.get(position));
+        holder.bindView(arrayList_produtos.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mNames.size();
+        return arrayList_produtos.size();
     }
-
 
     class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
 
-        private static final String TAG = "MyViewHolder";
-        TextView textView;
-        ImageButton imageButton;
+        private TextView textView_produto;
+        private ImageButton imageButton;
+        private UserAuth userAuth = new UserAuth();
+        private DatabaseReference databaseReference_mercado = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID() + "/mercado");
 
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-            textView = itemView.findViewById(R.id.fragment_dashboard_recyclerview_list_item_textView);
+            textView_produto = itemView.findViewById(R.id.fragment_dashboard_recyclerview_list_item_textView);
             imageButton = itemView.findViewById(R.id.imageButton);
             imageButton.setOnClickListener(this);
         }
 
         void bindView(String row) {
-            textView.setText(row);
+            textView_produto.setText(row);
         }
 
         @Override
@@ -102,54 +92,46 @@ public class RecyclerAdapterDashboard extends RecyclerView.Adapter<RecyclerAdapt
             popupMenu.show();
         }
 
-        UserAuth userAuth = new UserAuth();
-        DatabaseReference path = userAuth.returnReference().child("/users" + "/" + userAuth.getCurrentUserUID()+"/mercado");
-        // Initialize activity
-
 
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_popup_edit:
-                    path.addValueEventListener(new ValueEventListener() {
+                    databaseReference_mercado.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                             for (DataSnapshot pai : snapshot.getChildren()) {
                                 for (DataSnapshot filho : pai.getChildren()) {
-                                    System.out.println("KEY FILHO: " + filho.getKey());
-                                    if (filho.getValue().toString().contains(textView.getText().toString())) {
+                                    if (filho.getValue().toString().contains(textView_produto.getText().toString())) {
 
+                                        AlertDialog.Builder alertDialog;
+                                        LayoutInflater layoutInflater;
+                                        View view;
                                         Map<String, Object> childUpdates = new HashMap<>();
-                                        alert = new AlertDialog.Builder(mContext);
-                                        linf = LayoutInflater.from(mContext);
-                                        inflator = linf.inflate(R.layout.dialog_edit_dashboard, null);
-                                        alert.setTitle("Tilte");
-                                        alert.setMessage("Message");
-                                        alert.setView(inflator);
+                                        alertDialog = new AlertDialog.Builder(context);
+                                        layoutInflater = LayoutInflater.from(context);
 
-                                        final EditText et1 = (EditText) inflator.findViewById(R.id.dialog_dashboard_editText);
-                                        et1.setText(filho.getValue().toString());
-
-                                        alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                        view = layoutInflater.inflate(R.layout.dialog_edit_dashboard, null);
+                                        alertDialog.setTitle("Editando o item: " + textView_produto.getText().toString());
+                                        alertDialog.setView(view);
+                                        final EditText editText_rowRecyclerView = view.findViewById(R.id.dialog_dashboard_editText);
+                                        editText_rowRecyclerView.setText(filho.getValue().toString());
+                                        alertDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                String s1 = et1.getText().toString();
-                                                Toast.makeText(mContext, s1, Toast.LENGTH_SHORT).show();
-                                                filho.getRef().setValue(s1);
+                                                String string_rowRecyclerView = editText_rowRecyclerView.getText().toString();
+                                                filho.getRef().setValue(string_rowRecyclerView);
+
                                             }
                                         });
 
-                                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
                                                 dialog.cancel();
                                             }
                                         });
-
-                                        alert.show();
+                                        alertDialog.show();
                                     }
-
                                 }
-
                             }
                         }
 
@@ -157,42 +139,45 @@ public class RecyclerAdapterDashboard extends RecyclerView.Adapter<RecyclerAdapt
                         public void onCancelled(@NonNull DatabaseError error) {
 
                         }
+
                     });
+                    notifyDataSetChanged();
                     return true;
+
+
                 case R.id.action_popup_delete:
 
-                    path.addValueEventListener(new ValueEventListener() {
+                    databaseReference_mercado.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-
                             for (DataSnapshot pai : snapshot.getChildren()) {
                                 for (DataSnapshot filho : pai.getChildren()) {
-                                    System.out.println("KEY FILHO: " + filho.getKey());
-                                    if (filho.getValue().toString().contains(textView.getText().toString())) {
+                                    if (filho.getValue().toString().contains(textView_produto.getText().toString())) {
 
+                                        AlertDialog.Builder alertDialog;
+                                        LayoutInflater layoutInflater;
+                                        View view;
                                         Map<String, Object> childUpdates = new HashMap<>();
-                                        alert = new AlertDialog.Builder(mContext);
-                                        linf = LayoutInflater.from(mContext);
-                                        inflator = linf.inflate(R.layout.dialog_remove_dashboard, null);
-                                        alert.setTitle("Tilte");
-                                        alert.setMessage("Message");
-                                        alert.setView(inflator);
+                                        alertDialog = new AlertDialog.Builder(context);
+                                        layoutInflater = LayoutInflater.from(context);
+                                        view = layoutInflater.inflate(R.layout.dialog_remove_dashboard, null);
 
+                                        alertDialog.setTitle("Deseja excluir: " + textView_produto.getText().toString() + "?");
+                                        alertDialog.setView(view);
 
-                                        alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                                        alertDialog.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-
                                                 filho.getRef().removeValue();
                                             }
                                         });
 
-                                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
                                                 dialog.cancel();
                                             }
                                         });
 
-                                        alert.show();
+                                        alertDialog.show();
                                     }
 
                                 }
@@ -205,6 +190,7 @@ public class RecyclerAdapterDashboard extends RecyclerView.Adapter<RecyclerAdapt
 
                         }
                     });
+
                     return true;
                 default:
                     return false;
