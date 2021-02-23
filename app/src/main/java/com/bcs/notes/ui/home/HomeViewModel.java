@@ -11,7 +11,7 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> userID;
     private MutableLiveData<String> userEmail;
 
-    UserAuth userAuth = new UserAuth();
+    private UserAuth userAuth = new UserAuth();
 
     public HomeViewModel() {
         userID = new MutableLiveData<>();
@@ -26,6 +26,5 @@ public class HomeViewModel extends ViewModel {
     public LiveData<String> getUserEmail() {
         return userEmail;
     }
-
 
 }

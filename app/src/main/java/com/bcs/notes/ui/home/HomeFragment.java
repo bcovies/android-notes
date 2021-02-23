@@ -25,19 +25,23 @@ import com.google.android.gms.tasks.Task;
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    UserAuth userAuth = new UserAuth();
+    private TextView textView_userID;
+    private TextView textView_userEmail;
+    private Button button_exit;
+    private Button button_reset;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+    private UserAuth userAuth = new UserAuth();
+
+    private void irParaLoginActivity() {
+        startActivity(new Intent(getActivity(), LoginActivity.class));
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        final TextView textView_userID = root.findViewById(R.id.fragment_home_textView_userID);
-        final TextView textView_userEmail = root.findViewById(R.id.fragment_home_textView_userEmail);
-        final Button button_exit = root.findViewById(R.id.fragment_home_button_exit);
-        final Button button_reset = root.findViewById(R.id.fragment_home_button_reset);
-
+        textView_userID = root.findViewById(R.id.fragment_home_textView_userID);
         homeViewModel.getUserID().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -45,6 +49,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        textView_userEmail = root.findViewById(R.id.fragment_home_textView_userEmail);
         homeViewModel.getUserEmail().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -52,7 +57,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
+        button_exit = root.findViewById(R.id.fragment_home_button_exit);
         button_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +67,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        button_reset = root.findViewById(R.id.fragment_home_button_reset);
         button_reset.setOnClickListener(new View.OnClickListener() {
             String email = userAuth.getCurrentUserEmail();
 
@@ -81,9 +87,4 @@ public class HomeFragment extends Fragment {
         });
         return root;
     }
-
-    private void irParaLoginActivity() {
-        startActivity(new Intent(getActivity(), LoginActivity.class));
-    }
-
 }
